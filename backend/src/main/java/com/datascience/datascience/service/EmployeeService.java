@@ -1,0 +1,4 @@
+package com.datascience.datascience.service;
+
+public interface EmployeeService {
+}
