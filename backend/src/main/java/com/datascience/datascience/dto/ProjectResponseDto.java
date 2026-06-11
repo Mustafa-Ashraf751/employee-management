@@ -1,4 +1,14 @@
 package com.datascience.datascience.dto;
 
-public record ProjectResponseDto() {
+import java.time.LocalDate;
+
+public record ProjectResponseDto(
+        Long id,
+        String name,
+        String description,
+        LocalDate startDate,
+        LocalDate endDate,
+        Long departmentId,
+        String departmentName
+) {
 }

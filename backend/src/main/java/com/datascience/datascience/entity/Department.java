@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -16,7 +19,7 @@ public class Department {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long departmentId;
+    private Long id;
 
     @Column(nullable = false,unique=true)
     private String name;
@@ -27,6 +30,10 @@ public class Department {
     @Column(nullable = false)
     private Double budget;
 
+    @OneToMany(mappedBy = "department")
+    private List<Employee> employees = new ArrayList<>();
 
+    @OneToMany(mappedBy = "department")
+    private List<Project> projects = new ArrayList<>();
 
 }

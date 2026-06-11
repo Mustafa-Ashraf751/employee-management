@@ -1,7 +1,7 @@
 package com.datascience.datascience.controller;
 
-import com.datascience.datascience.Dto.DepartmentRequestDto;
-import com.datascience.datascience.Dto.DepartmentResponseDto;
+import com.datascience.datascience.dto.DepartmentRequestDto;
+import com.datascience.datascience.dto.DepartmentResponseDto;
 import com.datascience.datascience.service.DepartmentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

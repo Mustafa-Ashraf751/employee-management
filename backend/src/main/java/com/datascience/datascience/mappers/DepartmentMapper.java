@@ -1,7 +1,7 @@
 package com.datascience.datascience.mappers;
 
-import com.datascience.datascience.Dto.DepartmentRequestDto;
-import com.datascience.datascience.Dto.DepartmentResponseDto;
+import com.datascience.datascience.dto.DepartmentRequestDto;
+import com.datascience.datascience.dto.DepartmentResponseDto;
 import com.datascience.datascience.entity.Department;
 import org.mapstruct.Mapper;
 
