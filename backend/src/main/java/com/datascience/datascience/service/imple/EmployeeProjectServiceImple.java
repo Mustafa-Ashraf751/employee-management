@@ -38,6 +38,13 @@ public class EmployeeProjectServiceImple implements EmployeeProjectService {
     }
 
     @Override
+    public List<EmployeeProjectResponseDto> getAll() {
+        return employeeProjectRepo.findAll().stream()
+                .map(employeeProjectMapper::toEmployeeResponseDto)
+                .toList();
+    }
+
+    @Override
     public EmployeeProjectResponseDto assignEmployeeToProject(EmployeeProjectRequestDto employeeProjectRequestDto) {
         Employee employee = employeeRepo.findById(employeeProjectRequestDto.EmployeeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));

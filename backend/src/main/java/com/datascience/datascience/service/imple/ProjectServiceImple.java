@@ -46,8 +46,10 @@ public class ProjectServiceImple implements ProjectService {
                 .description(project.description())
                 .startDate(project.startDate())
                 .endDate(project.endDate())
+                .department(departmentRepo.findById(project.departmentId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Department with id " + project.departmentId() + " not found")))
                 .build();
-        projectRepo.save(newProject);
+        newProject = projectRepo.save(newProject);
         return projectMapper.projectToProjectResponseDto(newProject);
     }
 
@@ -59,6 +61,9 @@ public class ProjectServiceImple implements ProjectService {
         updatedProject.setDescription(project.description());
         updatedProject.setStartDate(project.startDate());
         updatedProject.setEndDate(project.endDate());
+        updatedProject.setDepartment(departmentRepo.findById(project.departmentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Department with id " + project.departmentId() + " not found")));
+        updatedProject = projectRepo.save(updatedProject);
         return projectMapper.projectToProjectResponseDto(updatedProject);
     }
 
@@ -67,16 +72,6 @@ public class ProjectServiceImple implements ProjectService {
         Project project = projectRepo.findById(id)
                 .orElseThrow(()->new ResourceNotFoundException("Project with id " + id + " not found"));
         projectRepo.delete(project);
-        return "Project with id " + id + " not found";
-    }
-
-    @Override
-    public ProjectResponseDto assignDepartment(Long projectId, Long departmentId) {
-        Project project = projectRepo.findById(projectId)
-                .orElseThrow(()->new ResourceNotFoundException("Project with id " + projectId + " not found"));
-        Department department = departmentRepo.findById(departmentId)
-                .orElseThrow(()->new ResourceNotFoundException("Department with id " + departmentId + " not found"));
-        project.setDepartment(department);
-        return projectMapper.projectToProjectResponseDto(projectRepo.save(project));
+        return "Project with id " + id + " deleted successfully";
     }
 }

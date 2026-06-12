@@ -7,7 +7,9 @@
             {{ column }}
           </th>
         }
-        <th>Actions</th>
+        @if (showEdit || showDelete) {
+          <th>Actions</th>
+        }
       </tr>
     </thead>
 
@@ -19,14 +21,20 @@
               {{ row[column] }}
             </td>
           }
-          <td class="actions-cell">
-            <button (click)="edit.emit(row)">
-              Edit
-            </button>
-            <button (click)="delete.emit(row)">
-              Delete
-            </button>
-          </td>
+          @if (showEdit || showDelete) {
+            <td class="actions-cell">
+              @if (showEdit) {
+                <button (click)="edit.emit(row)">
+                  Edit
+                </button>
+              }
+              @if (showDelete) {
+                <button (click)="delete.emit(row)">
+                  Delete
+                </button>
+              }
+            </td>
+          }
         </tr>
       } @empty {
         <tr>

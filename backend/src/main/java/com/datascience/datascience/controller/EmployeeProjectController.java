@@ -21,6 +21,11 @@ public class EmployeeProjectController {
         this.employeeProjectService = employeeProjectService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<EmployeeProjectResponseDto>> getAll() {
+        return new ResponseEntity<>(employeeProjectService.getAll(), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<EmployeeProjectResponseDto> assignEmployeeToProject(@Valid @RequestBody EmployeeProjectRequestDto employeeProjectRequestDto) {
         return new ResponseEntity<>(employeeProjectService.assignEmployeeToProject(employeeProjectRequestDto), HttpStatus.CREATED);

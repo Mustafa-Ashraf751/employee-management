@@ -26,7 +26,7 @@ export class ProjectService {
     }
 
     deleteProject(id: number): Observable<string> {
-        return this.http.delete<string>(`${this.apiUrl}/${id}`);
+      return this.http.delete<string>(`${this.apiUrl}/${id}`, { responseType: 'text' as 'json' });
     }
 
 }

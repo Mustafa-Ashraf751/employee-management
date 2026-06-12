@@ -20,9 +20,9 @@ public class EmployeeServiceImple implements EmployeeService {
     private final EmployeeMapper employeeMapper;
     private final DepartmentRepo departmentRepo;
 
-    public EmployeeServiceImple(EmployeeRepo employeeRepo1, EmployeeMapper employeeMapper1, DepartmentRepo departmentRepo) {
-        this.employeeRepo = employeeRepo1;
-        this.employeeMapper = employeeMapper1;
+    public EmployeeServiceImple(EmployeeRepo employeeRepo, EmployeeMapper employeeMapper, DepartmentRepo departmentRepo) {
+        this.employeeRepo = employeeRepo;
+        this.employeeMapper = employeeMapper;
         this.departmentRepo = departmentRepo;
     }
 
@@ -47,8 +47,10 @@ public class EmployeeServiceImple implements EmployeeService {
                 .phone(employeeRequestDto.phone())
                 .hireDate(employeeRequestDto.hireDate())
                 .salary(employeeRequestDto.salary())
+                .department(departmentRepo.findById(employeeRequestDto.departmentId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Department with id " + employeeRequestDto.departmentId() + " not found")))
                 .build();
-        employeeRepo.save(newEmployee);
+        newEmployee = employeeRepo.save(newEmployee);
         return employeeMapper.toEmployeeResponseDto(newEmployee);
     }
 
@@ -61,6 +63,8 @@ public class EmployeeServiceImple implements EmployeeService {
         employee.setPhone(employeeRequestDto.phone());
         employee.setHireDate(employeeRequestDto.hireDate());
         employee.setSalary(employeeRequestDto.salary());
+        employee.setDepartment(departmentRepo.findById(employeeRequestDto.departmentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Department with id " + employeeRequestDto.departmentId() + " not found")));
         Employee updatedEmployee = employeeRepo.save(employee);
         return employeeMapper.toEmployeeResponseDto(updatedEmployee);
     }

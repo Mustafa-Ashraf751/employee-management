@@ -8,6 +8,8 @@ import com.datascience.datascience.dto.ProjectResponseDto;
 import java.util.List;
 
 public interface EmployeeProjectService {
+    List<EmployeeProjectResponseDto> getAll();
+
     EmployeeProjectResponseDto assignEmployeeToProject(EmployeeProjectRequestDto employeeProjectRequestDto);
 
     String removeEmployeeFromProject(Long employeeProjectId);

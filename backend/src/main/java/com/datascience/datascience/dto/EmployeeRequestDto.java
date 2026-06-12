@@ -17,10 +17,12 @@ public record EmployeeRequestDto(
                 message = "Invalid phone number format"
         )
         String phone,
-        @NotBlank(message="Hiring date is required")
+        @NotNull(message="Hiring date is required")
         @PastOrPresent(message = "Hire date cannot be in the future")
         LocalDate hireDate,
         @Positive(message = "salary should be positive number")
-        Double salary
+        Double salary,
+        @NotNull(message = "Department ID is required")
+        Long departmentId
 ) {
 }

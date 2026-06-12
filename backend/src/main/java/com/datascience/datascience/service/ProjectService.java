@@ -11,5 +11,4 @@ public interface ProjectService {
     ProjectResponseDto createProject(ProjectRequestDto project);
     ProjectResponseDto updateProject(Long id,ProjectRequestDto project);
     String deleteProject(Long id);
-    ProjectResponseDto assignDepartment(Long projectId, Long departmentId);
 }

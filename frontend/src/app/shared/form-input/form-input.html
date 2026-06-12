@@ -4,11 +4,17 @@
     <div class="form-group">
       <label [for]="field.name">{{ field.label }}</label>
 
-      <input
-        [id]="field.name"
-        [type]="field.type"
-        [formControlName]="field.name"
-        [class.is-invalid]="dynamicForm.get(field.name)?.invalid && dynamicForm.get(field.name)?.touched">
+      @if (field.type === 'select') {
+      <select [id]="field.name" [formControlName]="field.name">
+        <option value="">Select {{ field.label }}</option>
+        @for (option of field.options; track option.value) {
+        <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+      } @else {
+        <input [id]="field.name" [type]="field.type" [formControlName]="field.name"
+          [class.is-invalid]="dynamicForm.get(field.name)?.invalid && dynamicForm.get(field.name)?.touched">
+      }
 
       @if (dynamicForm.get(field.name)?.invalid && dynamicForm.get(field.name)?.touched) {
         <div class="error-message">

@@ -47,9 +47,4 @@ public class ProjectController {
     public ResponseEntity<String> deleteProject(@PathVariable Long id) {
         return new ResponseEntity<>(this.projectService.deleteProject(id), HttpStatus.OK);
     }
-
-    @PutMapping("/{projectId}/departments/{departmentId}")
-    public ResponseEntity<ProjectResponseDto> updateProjectDepartment(@PathVariable Long projectId, @PathVariable Long departmentId) {
-        return new ResponseEntity<>(this.projectService.assignDepartment(projectId, departmentId), HttpStatus.OK);
-    }
 }
