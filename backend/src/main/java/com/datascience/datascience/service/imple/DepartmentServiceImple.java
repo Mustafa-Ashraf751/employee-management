@@ -51,7 +51,8 @@ public class DepartmentServiceImple implements DepartmentService {
                 .location(departmentDto.location())
                 .budget(departmentDto.budget())
                 .build();
-        return departmentMapper.toDto(departmentRepo.save(department));
+        department = departmentRepo.save(department);
+        return departmentMapper.toDto(department);
     }
 
     @Override

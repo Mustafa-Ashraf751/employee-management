@@ -1,0 +1,27 @@
+<form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">
+
+  @for (field of fields; track field.name) {
+    <div class="form-group">
+      <label [for]="field.name">{{ field.label }}</label>
+
+      <input
+        [id]="field.name"
+        [type]="field.type"
+        [formControlName]="field.name"
+        [class.is-invalid]="dynamicForm.get(field.name)?.invalid && dynamicForm.get(field.name)?.touched">
+
+      @if (dynamicForm.get(field.name)?.invalid && dynamicForm.get(field.name)?.touched) {
+        <div class="error-message">
+          {{ field.label }} is required
+        </div>
+      }
+    </div>
+  }
+
+  <div class="form-actions">
+    <button type="submit" class="submit-btn" [disabled]="dynamicForm.invalid">
+      {{ submitLabel }}
+    </button>
+  </div>
+
+</form>

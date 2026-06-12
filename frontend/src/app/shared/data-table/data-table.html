@@ -1,0 +1,40 @@
+<div class="table-container">
+  <table class="styled-table">
+    <thead>
+      <tr>
+        @for (column of columns; track column) {
+          <th>
+            {{ column }}
+          </th>
+        }
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (row of data; track row.id || $index) {
+        <tr>
+          @for (column of columns; track column) {
+            <td>
+              {{ row[column] }}
+            </td>
+          }
+          <td class="actions-cell">
+            <button (click)="edit.emit(row)">
+              Edit
+            </button>
+            <button (click)="delete.emit(row)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td [attr.colspan]="columns.length + 1" class="empty-state">
+            No records found.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
