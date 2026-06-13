@@ -12,6 +12,12 @@ services:
       - "./database/Dummy Data.sql:/docker-entrypoint-initdb.d/02-dummy-data.sql"
       - pgdata:/var/lib/postgresql/data
 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dataScience"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   backend:
     build:
       context: ./backend
@@ -24,7 +30,9 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: on-failure
 
   frontend:
     build:
@@ -33,7 +41,9 @@ services:
     ports:
       - "4200:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_started
+    restart: on-failure
 
 volumes:
   pgdata:
