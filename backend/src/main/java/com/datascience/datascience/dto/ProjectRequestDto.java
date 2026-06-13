@@ -18,9 +18,9 @@ public record ProjectRequestDto(
         @NotNull(message = "Project's start date is required")
         LocalDate startDate,
 
-        @NotNull(message = "Project's end date is required")
-        LocalDate endDate,
         
+        LocalDate endDate,
+
         @NotNull(message = "Department ID is required")
         Long departmentId
 ) {
