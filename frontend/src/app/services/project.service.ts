@@ -29,4 +29,8 @@ export class ProjectService {
       return this.http.delete<string>(`${this.apiUrl}/${id}`, { responseType: 'text' as 'json' });
     }
 
+    getProjectsByDepartment(departmentId: number): Observable<Project[]> {
+      return this.http.get<Project[]>(`${this.apiUrl}/department/${departmentId}`);
+    }
+
 }

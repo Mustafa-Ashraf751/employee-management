@@ -34,6 +34,7 @@ export class ProjectList implements OnInit {
   selectedProject: Project | null = null;
 
   departmentOptions = signal<{ label: string, value: number }[]>([]);
+  selectedDepartmentFilter = signal<number | null>(null);
 
   constructor(private projectService: ProjectService, private toastr: ToastrService, private departmentService: DepartmentService) { }
 
@@ -77,25 +78,58 @@ export class ProjectList implements OnInit {
     this.isFormVisible.set(false);
   }
 
+  onDepartmentFilterChange(event: any): void {
+    const value = event.target.value;
+    if (value) {
+      this.selectedDepartmentFilter.set(Number(value));
+      this.projectService.getProjectsByDepartment(Number(value)).subscribe((projects) => {
+        this.projects.set(projects);
+      });
+    } else {
+      this.selectedDepartmentFilter.set(null);
+      this.loadProjects();
+    }
+  }
+
   onFormSubmit(formData: any): void {
           if (this.selectedProject) {
             // Update existing project
             const updatedProject: Project = { ...formData, id: this.selectedProject.id };
-            this.projectService.updateProject(updatedProject).subscribe(() => {
-              this.loadProjects();
-              this.closeForm();
-              this.toastr.success('Project updated successfully!');
-            }, () => {
-              this.toastr.error('Failed to update project. Please try again.');
+            this.projectService.updateProject(updatedProject).subscribe({
+              next: (res: any) => {
+                this.loadProjects();
+                this.closeForm();
+                const msg = typeof res === 'string' ? res : 'Project updated successfully!';
+                this.toastr.success(msg);
+              },
+              error: (err) => {
+                let msg = 'Failed to update project. Please try again.';
+                if (err.error) {
+                    if (typeof err.error === 'string') {
+                        try { msg = JSON.parse(err.error).message || err.error; } catch { msg = err.error; }
+                    } else { msg = err.error.message || msg; }
+                }
+                this.toastr.error(msg);
+              }
             });
           } else {
             // Add new project
-            this.projectService.addProject(formData).subscribe(() => {
-              this.loadProjects();
-              this.closeForm();
-              this.toastr.success('Project added successfully!');
-            }, () => {
-              this.toastr.error('Failed to add project. Please try again.');
+            this.projectService.addProject(formData).subscribe({
+              next: (res: any) => {
+                this.loadProjects();
+                this.closeForm();
+                const msg = typeof res === 'string' ? res : 'Project added successfully!';
+                this.toastr.success(msg);
+              },
+              error: (err) => {
+                let msg = 'Failed to add project. Please try again.';
+                if (err.error) {
+                    if (typeof err.error === 'string') {
+                        try { msg = JSON.parse(err.error).message || err.error; } catch { msg = err.error; }
+                    } else { msg = err.error.message || msg; }
+                }
+                this.toastr.error(msg);
+              }
             });
           }
   }
@@ -106,11 +140,21 @@ export class ProjectList implements OnInit {
 
   onDelete(project: Project): void {
     if (confirm(`Are you sure you want to delete the project "${project.name}"?`)) {
-      this.projectService.deleteProject(Number(project.id)).subscribe(() => {
-        this.loadProjects();
-        this.toastr.success('Project deleted successfully!');
-      }, () => {
-        this.toastr.error('Failed to delete project. Please try again.');
+      this.projectService.deleteProject(Number(project.id)).subscribe({
+        next: (res: any) => {
+          this.loadProjects();
+          const msg = typeof res === 'string' ? res : 'Project deleted successfully!';
+          this.toastr.success(msg);
+        },
+        error: (err) => {
+          let msg = 'Failed to delete project. Please try again.';
+          if (err.error) {
+              if (typeof err.error === 'string') {
+                  try { msg = JSON.parse(err.error).message || err.error; } catch { msg = err.error; }
+              } else { msg = err.error.message || msg; }
+          }
+          this.toastr.error(msg);
+        }
       });
     }
   }

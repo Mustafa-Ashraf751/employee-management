@@ -36,6 +36,7 @@ export class EmployeeList implements OnInit {
   selectedEmployee: Employee | null = null;
 
   departmentOptions = signal<{ label: string, value: number }[]>([]);
+  selectedDepartmentFilter = signal<number | null>(null);
 
   constructor(private employeeService: EmployeeService, private toastr: ToastrService, private departmentService: DepartmentService) { }
 
@@ -77,19 +78,39 @@ export class EmployeeList implements OnInit {
     this.isFormVisible.set(false);
   }
 
+  onDepartmentFilterChange(event: any): void {
+    const value = event.target.value;
+    if (value) {
+      this.selectedDepartmentFilter.set(Number(value));
+      this.employeeService.getEmployeesByDepartment(Number(value)).subscribe((employees) => {
+        this.employees.set(employees);
+      });
+    } else {
+      this.selectedDepartmentFilter.set(null);
+      this.loadEmployees();
+    }
+  }
+
   onFormSubmit(formData: any): void {
       if (this.selectedEmployee) {
         // Update existing employee
         const updatedEmployee: Employee = { ...formData, id: this.selectedEmployee.id };
         this.employeeService.updateEmployee(updatedEmployee).subscribe(
           {
-            next: () => {
+            next: (res: any) => {
               this.loadEmployees();
               this.closeForm();
-              this.toastr.success('Employee updated successfully!');
+              const msg = typeof res === 'string' ? res : 'Employee updated successfully!';
+              this.toastr.success(msg);
             },
-            error: () => {
-              this.toastr.error('Failed to update employee. Please try again.');
+            error: (err) => {
+              let msg = 'Failed to update employee. Please try again.';
+              if (err.error) {
+                  if (typeof err.error === 'string') {
+                      try { msg = JSON.parse(err.error).message || err.error; } catch { msg = err.error; }
+                  } else { msg = err.error.message || msg; }
+              }
+              this.toastr.error(msg);
             }
           }
         );
@@ -97,14 +118,20 @@ export class EmployeeList implements OnInit {
         // Add new employee
         this.employeeService.addEmployee(formData).subscribe(
           {
-            next: () => {
+            next: (res: any) => {
               this.loadEmployees();
               this.closeForm();
-              this.toastr.success('Employee added successfully!');
+              const msg = typeof res === 'string' ? res : 'Employee added successfully!';
+              this.toastr.success(msg);
             },
-            error: () => {
-              console.error('Error adding employee:');
-              this.toastr.error('Failed to add employee. Please try again.');
+            error: (err) => {
+              let msg = 'Failed to add employee. Please try again.';
+              if (err.error) {
+                  if (typeof err.error === 'string') {
+                      try { msg = JSON.parse(err.error).message || err.error; } catch { msg = err.error; }
+                  } else { msg = err.error.message || msg; }
+              }
+              this.toastr.error(msg);
             }
           }
         );
@@ -117,11 +144,21 @@ export class EmployeeList implements OnInit {
 
   onDelete(employee: Employee): void {
     if (confirm(`Are you sure you want to delete ${employee.name}?`)) {
-      this.employeeService.deleteEmployee(employee.id).subscribe(() => {
-        this.loadEmployees();
-        this.toastr.success('Employee deleted successfully!');
-      }, () => {
-        this.toastr.error('Failed to delete employee. Please try again.');
+      this.employeeService.deleteEmployee(employee.id).subscribe({
+        next: (res: any) => {
+          this.loadEmployees();
+          const msg = typeof res === 'string' ? res : 'Employee deleted successfully!';
+          this.toastr.success(msg);
+        },
+        error: (err) => {
+          let msg = 'Failed to delete employee. Please try again.';
+          if (err.error) {
+              if (typeof err.error === 'string') {
+                  try { msg = JSON.parse(err.error).message || err.error; } catch { msg = err.error; }
+              } else { msg = err.error.message || msg; }
+          }
+          this.toastr.error(msg);
+        }
       });
     }
   }

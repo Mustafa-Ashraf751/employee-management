@@ -33,6 +33,12 @@ public class ProjectServiceImple implements ProjectService {
     }
 
     @Override
+    public List<ProjectResponseDto> getProjectsByDepartmentId(Long departmentId) {
+        List<Project> projects = projectRepo.findByDepartmentId(departmentId);
+        return projects.stream().map(projectMapper::projectToProjectResponseDto).collect(Collectors.toList());
+    }
+
+    @Override
     public ProjectResponseDto getProject(Long projectId) {
         Project project = projectRepo.findById(projectId)
                 .orElseThrow(()-> new ResourceNotFoundException("Project with id " + projectId + " not found"));

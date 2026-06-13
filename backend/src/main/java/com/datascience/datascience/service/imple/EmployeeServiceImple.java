@@ -40,6 +40,12 @@ public class EmployeeServiceImple implements EmployeeService {
     }
 
     @Override
+    public List<EmployeeResponseDto> getEmployeesByDepartmentId(Long departmentId) {
+        List<Employee> employees = employeeRepo.findByDepartmentId(departmentId);
+        return employees.stream().map(employeeMapper::toEmployeeResponseDto).collect(Collectors.toList());
+    }
+
+    @Override
     public EmployeeResponseDto addEmployee(EmployeeRequestDto employeeRequestDto) {
         Employee newEmployee = Employee.builder()
                 .name(employeeRequestDto.name())
@@ -76,15 +82,4 @@ public class EmployeeServiceImple implements EmployeeService {
         employeeRepo.delete(employee);
         return "Employee with id " + id + " deleted";
     }
-
-    @Override
-    public EmployeeResponseDto assignDepartment(Long employeeId, Long departmentId) {
-        Employee employee = employeeRepo.findById(employeeId)
-                .orElseThrow(()-> new ResourceNotFoundException("Employee with id " + employeeId + " not found"));
-        Department department = departmentRepo.findById(departmentId)
-                .orElseThrow(()-> new ResourceNotFoundException("Department with id " + departmentId + " not found"));
-        employee.setDepartment(department);
-        return employeeMapper.toEmployeeResponseDto(employeeRepo.save(employee));
-    }
-
 }

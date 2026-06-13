@@ -28,3 +28,23 @@
   cursor: pointer;
   text-decoration: underline;
 }
+
+@media screen and (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 15px;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .navbar h2 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  .navbar ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+}

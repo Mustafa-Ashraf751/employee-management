@@ -55,12 +55,20 @@ export class DepartmentList implements OnInit {
           const updatedDepartment: Department = { ...formData, id: this.selectedDepartment.id };
           this.departmentService.updateDepartment(updatedDepartment).subscribe(
             {
-              next: ()=> {
+              next: (res: any) => {
                   this.loadDepartments();
                   this.closeForm();
-                  this.toastr.success('Department updated successfully!');
-              },error: () => {
-                  this.toastr.error('Failed to update department. Please try again.');
+                  const msg = typeof res === 'string' ? res : 'Department updated successfully!';
+                  this.toastr.success(msg);
+              },
+              error: (err) => {
+                  let msg = 'Failed to update department. Please try again.';
+                  if (err.error) {
+                      if (typeof err.error === 'string') {
+                          try { msg = JSON.parse(err.error).message || err.error; } catch { msg = err.error; }
+                      } else { msg = err.error.message || msg; }
+                  }
+                  this.toastr.error(msg);
               }
             }
           );
@@ -68,13 +76,20 @@ export class DepartmentList implements OnInit {
           // Add new department
           this.departmentService.addDepartment(formData).subscribe(
             {
-              next: () => {
+              next: (res: any) => {
                 this.loadDepartments();
                 this.closeForm();
-                this.toastr.success('Department added successfully!');
+                const msg = typeof res === 'string' ? res : 'Department added successfully!';
+                this.toastr.success(msg);
               },
-              error: () => {
-                this.toastr.error('Failed to add department. Please try again.');
+              error: (err) => {
+                  let msg = 'Failed to add department. Please try again.';
+                  if (err.error) {
+                      if (typeof err.error === 'string') {
+                          try { msg = JSON.parse(err.error).message || err.error; } catch { msg = err.error; }
+                      } else { msg = err.error.message || msg; }
+                  }
+                  this.toastr.error(msg);
               }
             }
           );
@@ -87,11 +102,21 @@ export class DepartmentList implements OnInit {
 
     onDelete(department: Department): void {
        if (confirm(`Are you sure you want to delete the department "${department.name}"?`)) {
-         this.departmentService.deleteDepartment(department.id).subscribe(() => {
-            this.loadDepartments();
-            this.toastr.success('Department deleted successfully!');
-         }, () => {
-            this.toastr.error('Failed to delete department. Please try again.');
+         this.departmentService.deleteDepartment(department.id).subscribe({
+           next: (res: any) => {
+             this.loadDepartments();
+             const msg = typeof res === 'string' ? res : 'Department deleted successfully!';
+             this.toastr.success(msg);
+           },
+           error: (err) => {
+               let msg = 'Failed to delete department. Please try again.';
+               if (err.error) {
+                   if (typeof err.error === 'string') {
+                       try { msg = JSON.parse(err.error).message || err.error; } catch { msg = err.error; }
+                   } else { msg = err.error.message || msg; }
+               }
+               this.toastr.error(msg);
+           }
          });
        }
     }

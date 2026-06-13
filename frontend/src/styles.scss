@@ -60,3 +60,36 @@
   background-color: #f8f9fa;
   border-color: #adb5bd;
 }
+
+/* Responsive Media Queries */
+@media screen and (max-width: 768px) {
+  .page-container {
+    padding: 16px;
+  }
+
+  .header-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+
+    .add-btn, .cancel-btn {
+      width: 100%;
+    }
+  }
+
+  /* Make filters stack vertically on small screens */
+  .filters-section {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  /* Ensure table actions don't get too cramped */
+  .styled-table .actions-cell {
+    flex-direction: column;
+    gap: 6px;
+    
+    button {
+      width: 100%;
+    }
+  }
+}

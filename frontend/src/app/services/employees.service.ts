@@ -29,4 +29,8 @@ export class EmployeeService {
       return this.http.delete<string>(`${this.apiUrl}/${id}`, { responseType: 'text' as 'json' });
     }
 
+    getEmployeesByDepartment(departmentId: number): Observable<Employee[]> {
+        return this.http.get<Employee[]>(`${this.apiUrl}/department/${departmentId}`);
+    }
+
 }

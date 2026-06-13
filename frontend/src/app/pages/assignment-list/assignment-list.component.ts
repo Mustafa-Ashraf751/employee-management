@@ -134,13 +134,20 @@ export class AssignmentList implements OnInit {
 
   onFormSubmit(formData: any): void {
     this.assignmentService.assignEmployee(formData).subscribe({
-      next: () => {
+      next: (res: any) => {
         this.loadAssignments();
         this.closeForm();
-        this.toastr.success('Assignment added successfully!');
+        const msg = typeof res === 'string' ? res : 'Assignment added successfully!';
+        this.toastr.success(msg);
       },
-      error: () => {
-        this.toastr.error('Failed to add assignment. Please try again.');
+      error: (err) => {
+        let msg = 'Failed to add assignment. Please try again.';
+        if (err.error) {
+            if (typeof err.error === 'string') {
+                try { msg = JSON.parse(err.error).message || err.error; } catch { msg = err.error; }
+            } else { msg = err.error.message || msg; }
+        }
+        this.toastr.error(msg);
       },
     });
   }
@@ -148,12 +155,19 @@ export class AssignmentList implements OnInit {
   onDelete(assignment: Assignment): void {
     if (confirm(`Are you sure you want to remove this assignment?`)) {
       this.assignmentService.removeAssignment(assignment.id).subscribe({
-        next: () => {
+        next: (res: any) => {
           this.loadAssignments();
-          this.toastr.success('Assignment removed successfully!');
+          const msg = typeof res === 'string' ? res : 'Assignment removed successfully!';
+          this.toastr.success(msg);
         },
-        error: () => {
-          this.toastr.error('Failed to remove assignment. Please try again.');
+        error: (err) => {
+          let msg = 'Failed to remove assignment. Please try again.';
+          if (err.error) {
+              if (typeof err.error === 'string') {
+                  try { msg = JSON.parse(err.error).message || err.error; } catch { msg = err.error; }
+              } else { msg = err.error.message || msg; }
+          }
+          this.toastr.error(msg);
         },
       });
     }
