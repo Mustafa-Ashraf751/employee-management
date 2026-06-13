@@ -54,14 +54,14 @@ This method spins up the frontend, backend, and a PostgreSQL database pre-config
 2. In the root directory (where `docker-compose.yml` is located), run:
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 3. Access the application:
    * **Frontend:** `http://localhost:4200`
    * **Backend API / Swagger UI:** `http://localhost:8080/swagger-ui/index.html`
 
-*Note: The database volume is persisted. To start completely fresh with the dummy data, you can run `docker-compose down -v` before starting it up again.*
+*Note: The database volume is persisted. To start completely fresh with the dummy data, you can run `docker compose down -v` before starting it up again.*
 
 ---
 
