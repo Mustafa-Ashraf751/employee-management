@@ -46,6 +46,10 @@ public class EmployeeProjectServiceImple implements EmployeeProjectService {
 
     @Override
     public EmployeeProjectResponseDto assignEmployeeToProject(EmployeeProjectRequestDto employeeProjectRequestDto) {
+        if (employeeProjectRepo.existsByEmployeeIdAndProjectId(employeeProjectRequestDto.EmployeeId(), employeeProjectRequestDto.projectId())) {
+            throw new com.datascience.datascience.exception.BusinessException("This employee is already assigned to this project.");
+        }
+
         Employee employee = employeeRepo.findById(employeeProjectRequestDto.EmployeeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
         Project project = projectRepo.findById(employeeProjectRequestDto.projectId())

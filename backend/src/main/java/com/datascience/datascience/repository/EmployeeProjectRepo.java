@@ -9,4 +9,6 @@ public interface EmployeeProjectRepo extends JpaRepository<EmployeeProject, Long
     List<EmployeeProject> findByEmployeeId(Long employeeId);
 
     List<EmployeeProject> findByProjectId(Long projectId);
+
+    boolean existsByEmployeeIdAndProjectId(Long employeeId, Long projectId);
 }

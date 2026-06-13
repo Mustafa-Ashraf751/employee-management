@@ -20,4 +20,9 @@ export class DataTable {
 
   @Output() delete = new EventEmitter<any>();
 
+  formatHeader(column: string): string {
+    const spaced = column.replace(/([A-Z])/g, ' $1').trim();
+    return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+  }
+
 }
