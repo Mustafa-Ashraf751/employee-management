@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public record EmployeeRequestDto(
         @NotBlank(message = "Employee name is required")
-        @Size(min = 3,max = 20,message = "The employee location must be between 3 and 20 characters")
+        @Size(min = 3,max = 50,message = "The employee name must be between 3 and 50 characters")
         String name,
         @Email(message="Please provide a valid email")
         @NotBlank(message="Email is required")

@@ -3,6 +3,7 @@ package com.datascience.datascience.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 
 public record DepartmentRequestDto(
         @NotBlank(message = "Department's name is required")
@@ -11,6 +12,7 @@ public record DepartmentRequestDto(
 
         @NotBlank(message = "Department's location is required")
         @Size(min = 3,max = 20,message = "The department location must be between 3 and 20 characters")
+        @Pattern(regexp = "^(?!\\\\d+$).+$", message = "Department's location cannot be just a number")
         String location,
 
         @Positive (message = "Department's budget must be positive")
