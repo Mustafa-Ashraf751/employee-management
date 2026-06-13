@@ -67,12 +67,12 @@ INSERT INTO employee_projects (
     role
 )
 VALUES
-(1, 1, 'Backend Developer'),
-(2, 1, 'Project Manager'),
-(5, 1, 'Frontend Developer'),
+(1, 1, 'BACKEND_DEVELOPER'),
+(2, 1, 'PROJECT_MANAGER'),
+(5, 1, 'FRONTEND_DEVELOPER'),
 
-(4, 2, 'Business Analyst'),
-(2, 2, 'Technical Lead'),
+(4, 2, 'BUSINESS_ANALYST'),
+(2, 2, 'TECHNICAL_LEAD'),
 
-(3, 3, 'HR Specialist'),
-(1, 3, 'Technical Consultant');
+(3, 3, 'HR_SPECIALIST'),
+(1, 3, 'TECHNICAL_CONSULTANT');
