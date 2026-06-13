@@ -27,7 +27,7 @@ export class ProjectList implements OnInit {
     { name: 'name', label: 'Name', type: 'text', required: true },
     { name: 'description', label: 'Description', type: 'text', required: true },
     { name: 'startDate', label: 'Start Date', type: 'date', required: true },
-    { name: 'endDate', label: 'End Date', type: 'date', required: true },
+    { name: 'endDate', label: 'End Date', type: 'date' },
     { name: 'departmentId', label: 'Department', type: 'select', required: true, options: [] }
   ]
   isFormVisible = signal<boolean>(false);
