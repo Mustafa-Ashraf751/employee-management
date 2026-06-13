@@ -6,10 +6,11 @@ import { FormInput } from '../../shared/form-input/form-input.component';
 import { DataTable } from '../../shared/data-table/data-table.component';
 import { ToastrService } from 'ngx-toastr';
 import { DepartmentService } from '../../services/department.service';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-project-list',
-  imports: [DataTable, FormInput],
+  imports: [DataTable, FormInput, ConfirmDialogComponent],
   templateUrl: './project-list.html',
   styleUrl: './project-list.scss',
 })
@@ -134,19 +135,28 @@ export class ProjectList implements OnInit {
           }
   }
 
+  itemToDelete = signal<Project | null>(null);
+
   onEdit(project: Project): void {
     this.openForm(project);
   }
 
   onDelete(project: Project): void {
-    if (confirm(`Are you sure you want to delete the project "${project.name}"?`)) {
+    this.itemToDelete.set(project);
+  }
+
+  confirmDelete(): void {
+    const project = this.itemToDelete();
+    if (project) {
       this.projectService.deleteProject(Number(project.id)).subscribe({
         next: (res: any) => {
           this.loadProjects();
+          this.itemToDelete.set(null);
           const msg = typeof res === 'string' ? res : 'Project deleted successfully!';
           this.toastr.success(msg);
         },
         error: (err) => {
+          this.itemToDelete.set(null);
           let msg = 'Failed to delete project. Please try again.';
           if (err.error) {
               if (typeof err.error === 'string') {
@@ -157,6 +167,10 @@ export class ProjectList implements OnInit {
         }
       });
     }
+  }
+
+  cancelDelete(): void {
+    this.itemToDelete.set(null);
   }
 
 }

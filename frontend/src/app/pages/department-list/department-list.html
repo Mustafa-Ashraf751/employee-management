@@ -26,4 +26,13 @@
       </app-form-input>
     </div>
   }
+
+  @if (itemToDelete()) {
+    <app-confirm-dialog
+      [title]="'Delete Department'"
+      [message]="'Are you sure you want to delete the department \'' + itemToDelete()?.name + '\'?'"
+      (confirm)="confirmDelete()"
+      (cancel)="cancelDelete()">
+    </app-confirm-dialog>
+  }
 </div>

@@ -38,4 +38,13 @@
       </app-form-input>
     </div>
   }
+
+  @if (itemToDelete()) {
+    <app-confirm-dialog
+      [title]="'Delete Project'"
+      [message]="'Are you sure you want to delete the project \'' + itemToDelete()?.name + '\'?'"
+      (confirm)="confirmDelete()"
+      (cancel)="cancelDelete()">
+    </app-confirm-dialog>
+  }
 </div>

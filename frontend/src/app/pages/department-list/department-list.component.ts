@@ -4,11 +4,12 @@ import { DepartmentService } from '../../services/department.service';
 import { DataTable } from '../../shared/data-table/data-table.component';
 import { FormField } from '../../models/formField';
 import { FormInput } from '../../shared/form-input/form-input.component';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-department-list',
-  imports: [DataTable, FormInput],
+  imports: [DataTable, FormInput, ConfirmDialogComponent],
   templateUrl: './department-list.html',
   styleUrl: './department-list.scss',
 })
@@ -96,29 +97,42 @@ export class DepartmentList implements OnInit {
         }
     }
 
+    itemToDelete = signal<Department | null>(null);
+
     onEdit(department: Department): void {
       this.openForm(department);
     }
 
     onDelete(department: Department): void {
-       if (confirm(`Are you sure you want to delete the department "${department.name}"?`)) {
-         this.departmentService.deleteDepartment(department.id).subscribe({
-           next: (res: any) => {
-             this.loadDepartments();
-             const msg = typeof res === 'string' ? res : 'Department deleted successfully!';
-             this.toastr.success(msg);
-           },
-           error: (err) => {
-               let msg = 'Failed to delete department. Please try again.';
-               if (err.error) {
-                   if (typeof err.error === 'string') {
-                       try { msg = JSON.parse(err.error).message || err.error; } catch { msg = err.error; }
-                   } else { msg = err.error.message || msg; }
-               }
-               this.toastr.error(msg);
-           }
-         });
-       }
+      this.itemToDelete.set(department);
+    }
+
+    confirmDelete(): void {
+      const department = this.itemToDelete();
+      if (department) {
+        this.departmentService.deleteDepartment(department.id).subscribe({
+          next: (res: any) => {
+            this.loadDepartments();
+            this.itemToDelete.set(null);
+            const msg = typeof res === 'string' ? res : 'Department deleted successfully!';
+            this.toastr.success(msg);
+          },
+          error: (err) => {
+            this.itemToDelete.set(null);
+            let msg = 'Failed to delete department. Please try again.';
+            if (err.error) {
+                if (typeof err.error === 'string') {
+                    try { msg = JSON.parse(err.error).message || err.error; } catch { msg = err.error; }
+                } else { msg = err.error.message || msg; }
+            }
+            this.toastr.error(msg);
+          }
+        });
+      }
+    }
+
+    cancelDelete(): void {
+      this.itemToDelete.set(null);
     }
 
 }

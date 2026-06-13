@@ -47,4 +47,13 @@
       </app-form-input>
     </div>
   }
+
+  @if (itemToDelete()) {
+    <app-confirm-dialog
+      [title]="'Remove Assignment'"
+      [message]="'Are you sure you want to remove this assignment?'"
+      (confirm)="confirmDelete()"
+      (cancel)="cancelDelete()">
+    </app-confirm-dialog>
+  }
 </div>

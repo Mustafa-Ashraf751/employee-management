@@ -8,10 +8,11 @@ import { FormField } from '../../models/formField';
 import { ToastrService } from 'ngx-toastr';
 import { Assignment } from '../../models/assignment';
 import { RoleLabelPipe } from '../../shared/pipes/role-label.pipe';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-assignment-list',
-  imports: [DataTable, FormInput],
+  imports: [DataTable, FormInput, ConfirmDialogComponent],
   templateUrl: './assignment-list.html',
   styleUrl: './assignment-list.scss',
   providers: [RoleLabelPipe],
@@ -152,15 +153,24 @@ export class AssignmentList implements OnInit {
     });
   }
 
+  itemToDelete = signal<Assignment | null>(null);
+
   onDelete(assignment: Assignment): void {
-    if (confirm(`Are you sure you want to remove this assignment?`)) {
+    this.itemToDelete.set(assignment);
+  }
+
+  confirmDelete(): void {
+    const assignment = this.itemToDelete();
+    if (assignment) {
       this.assignmentService.removeAssignment(assignment.id).subscribe({
         next: (res: any) => {
           this.loadAssignments();
+          this.itemToDelete.set(null);
           const msg = typeof res === 'string' ? res : 'Assignment removed successfully!';
           this.toastr.success(msg);
         },
         error: (err) => {
+          this.itemToDelete.set(null);
           let msg = 'Failed to remove assignment. Please try again.';
           if (err.error) {
               if (typeof err.error === 'string') {
@@ -168,8 +178,12 @@ export class AssignmentList implements OnInit {
               } else { msg = err.error.message || msg; }
           }
           this.toastr.error(msg);
-        },
+        }
       });
     }
+  }
+
+  cancelDelete(): void {
+    this.itemToDelete.set(null);
   }
 }
